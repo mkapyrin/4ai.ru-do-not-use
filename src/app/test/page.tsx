@@ -13,13 +13,13 @@ import { Heart, Star, Phone, Mail, MessageCircle, Share2, ArrowRight, Sparkles, 
 import { genderQuestion, questions, calculateArchetype, shareTexts } from '@/data/testData';
 
 export default function TantricTestPage() {
-  const [currentStep, setCurrentStep] = useState('intro');
+  const [currentStep, setCurrentStep] = useState<'intro' | 'gender' | 'test' | 'results' | 'contact'>('intro');
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState([]);
+  const [answers, setAnswers] = useState<any[]>([]);
   const [gender, setGender] = useState('');
-  const [selectedAnswers, setSelectedAnswers] = useState([]);
+  const [selectedAnswers, setSelectedAnswers] = useState<any[]>([]);
   const [userInfo, setUserInfo] = useState({ name: '', email: '', phone: '' });
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<any>(null);
 
   const handleStartTest = () => {
     setCurrentStep('gender');
@@ -132,6 +132,7 @@ export default function TantricTestPage() {
                   </div>
 
                   <Button
+                    variant="default"
                     onClick={handleStartTest}
                     size="lg"
                     className="text-white px-8 py-4 text-lg"
@@ -155,7 +156,7 @@ export default function TantricTestPage() {
               <Card className="max-w-2xl mx-auto">
                 <CardHeader className="text-center">
                   <CardTitle className="text-2xl">Выберите ваш пол</CardTitle>
-                  <CardDescription>
+                  <CardDescription className="">
                     Это поможет нам дать более точные рекомендации
                   </CardDescription>
                 </CardHeader>
@@ -194,17 +195,17 @@ export default function TantricTestPage() {
               exit={{ opacity: 0, y: -20 }}
             >
               <Card className="max-w-3xl mx-auto">
-                <CardHeader>
+                <CardHeader className="">
                   <div className="flex justify-between items-center mb-4">
-                    <CardTitle>Вопрос {currentQuestion + 1} из {questions.length}</CardTitle>
-                    <Badge variant="secondary">{Math.round(progress)}%</Badge>
+                    <CardTitle className="">Вопрос {currentQuestion + 1} из {questions.length}</CardTitle>
+                    <Badge variant="secondary" size="default" className="">{Math.round(progress)}%</Badge>
                   </div>
                   <Progress value={progress} className="w-full" />
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="text-center">
                     <h3 className="text-xl font-semibold mb-6">
-                      {questions[currentQuestion].question}
+                      {questions[currentQuestion].text}
                     </h3>
 
                     <div className="space-y-3">
@@ -223,6 +224,7 @@ export default function TantricTestPage() {
                               <Checkbox
                                 checked={selectedAnswers.some(a => a.text === answer.text)}
                                 readOnly
+                                className=""
                               />
                             ) : (
                               <div className={`w-4 h-4 rounded-full border-2 ${
@@ -238,6 +240,8 @@ export default function TantricTestPage() {
                     </div>
 
                     <Button
+                      variant="default"
+                      size="default"
                       onClick={handleNextQuestion}
                       disabled={selectedAnswers.length === 0}
                       className="mt-6 text-white px-8 py-3"
@@ -277,7 +281,7 @@ export default function TantricTestPage() {
                       <div>
                         <h4 className="font-semibold mb-2">Ваши сильные стороны:</h4>
                         <ul className="text-sm text-gray-600 space-y-1">
-                          {result.archetype.strengths.map((strength, index) => (
+                          {result.archetype.strengths.map((strength: string, index: number) => (
                             <li key={index}>• {strength}</li>
                           ))}
                         </ul>
@@ -285,7 +289,7 @@ export default function TantricTestPage() {
                       <div>
                         <h4 className="font-semibold mb-2">Области для развития:</h4>
                         <ul className="text-sm text-gray-600 space-y-1">
-                          {result.archetype.growthAreas.map((area, index) => (
+                          {result.archetype.growthAreas.map((area: string, index: number) => (
                             <li key={index}>• {area}</li>
                           ))}
                         </ul>
@@ -295,7 +299,7 @@ export default function TantricTestPage() {
 
                   {/* Recommended Service */}
                   <Card className={`border-2 bg-gradient-to-r ${result.archetype.color} bg-opacity-10`}>
-                    <CardHeader>
+                    <CardHeader className="">
                       <CardTitle className="text-center">Подходящее для вас занятие</CardTitle>
                     </CardHeader>
                     <CardContent className="text-center">
@@ -312,7 +316,7 @@ export default function TantricTestPage() {
                             type="text"
                             required
                             value={userInfo.name}
-                            onChange={(e) => setUserInfo({...userInfo, name: e.target.value})}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserInfo({...userInfo, name: e.target.value})}
                             placeholder="Ваше имя"
                             className="text-center"
                           />
@@ -322,7 +326,7 @@ export default function TantricTestPage() {
                             type="email"
                             required
                             value={userInfo.email}
-                            onChange={(e) => setUserInfo({...userInfo, email: e.target.value})}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserInfo({...userInfo, email: e.target.value})}
                             placeholder="email@example.ru"
                             className="text-center"
                           />
@@ -331,60 +335,24 @@ export default function TantricTestPage() {
                           <Input
                             type="tel"
                             value={userInfo.phone}
-                            onChange={(e) => setUserInfo({...userInfo, phone: e.target.value})}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserInfo({...userInfo, phone: e.target.value})}
                             placeholder="+7 (915) 237-05-79 (необязательно)"
                             className="text-center"
                           />
                         </div>
-                        <Button type="submit" size="lg" className="text-white w-full">
+                        <Button variant="default" type="submit" size="lg" className="text-white w-full">
                           Получить персональные рекомендации
                         </Button>
                       </form>
                     </CardContent>
                   </Card>
 
-                  {/* Contact Form - после результатов */}
-                  {currentStep === 'contact' && (
-                    <motion.div
-                      key="contact"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                    >
-                      <Card className="max-w-md mx-auto">
-                        <CardHeader className="text-center">
-                          <CardTitle className="text-2xl mb-2">Спасибо за интерес!</CardTitle>
-                          <CardDescription>
-                            Мы отправим вам персональные рекомендации на указанный email
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="text-center space-y-4">
-                            <div className="text-green-600 font-semibold">
-                              ✅ Ваши данные получены!
-                            </div>
-                            <div className="text-sm text-gray-600">
-                              <p>Имя: {userInfo.name}</p>
-                              <p>Email: {userInfo.email}</p>
-                              {userInfo.phone && <p>Телефон: {userInfo.phone}</p>}
-                            </div>
-                            <Button
-                              onClick={handleRetakeTest}
-                              className="w-full"
-                              variant="outline"
-                            >
-                              Пройти тест заново
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  )}
-
                   <div className="flex gap-4 justify-center">
                     <Button
                       onClick={handleRetakeTest}
                       variant="outline"
+                      size="default"
+                      className=""
                     >
                       Пройти тест заново
                     </Button>
@@ -396,6 +364,45 @@ export default function TantricTestPage() {
                     >
                       Записаться на занятие
                     </a>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+
+          {/* Contact Form - после результатов */}
+          {currentStep === 'contact' && (
+            <motion.div
+              key="contact"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+            >
+              <Card className="max-w-md mx-auto">
+                <CardHeader className="text-center">
+                  <CardTitle className="text-2xl mb-2">Спасибо за интерес!</CardTitle>
+                  <CardDescription className="">
+                    Мы отправим вам персональные рекомендации на указанный email
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="">
+                  <div className="text-center space-y-4">
+                    <div className="text-green-600 font-semibold">
+                      ✅ Ваши данные получены!
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      <p>Имя: {userInfo.name}</p>
+                      <p>Email: {userInfo.email}</p>
+                      {userInfo.phone && <p>Телефон: {userInfo.phone}</p>}
+                    </div>
+                    <Button
+                      onClick={handleRetakeTest}
+                      className="w-full"
+                      variant="outline"
+                      size="default"
+                    >
+                      Пройти тест заново
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

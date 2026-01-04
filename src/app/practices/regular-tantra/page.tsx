@@ -64,7 +64,7 @@ export default function RegularTantraPage() {
                 Записаться на занятие
               </a>
               <Link href="/test">
-                <Button variant="outline" className="px-8 py-4">
+                <Button variant="outline" size="default" className="px-8 py-4">
                   Пройти тест для новичков
                 </Button>
               </Link>
@@ -138,28 +138,28 @@ export default function RegularTantraPage() {
           </h2>
           <div className="grid md:grid-cols-2 gap-8">
             <Card className="text-center">
-              <CardHeader>
+              <CardHeader className="">
                 <CardTitle className="text-2xl">Разовое посещение</CardTitle>
-                <CardDescription>Попробовать формат</CardDescription>
+                <CardDescription className="">Попробовать формат</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="">
                 <div className="text-3xl font-bold text-purple-600 mb-4">2000₽</div>
                 <div className="text-gray-600 mb-6">3 часа практики</div>
-                <Button className="w-full text-white" style={{ background: 'linear-gradient(to right, #8b5cf6, #ec4899)' }}>
+                <Button variant="default" size="default" className="w-full text-white" style={{ background: 'linear-gradient(to right, #8b5cf6, #ec4899)' }}>
                   Записаться на пробное
                 </Button>
               </CardContent>
             </Card>
 
             <Card className="text-center border-purple-200">
-              <CardHeader>
+              <CardHeader className="">
                 <CardTitle className="text-2xl">Абонемент на 4 занятия</CardTitle>
-                <CardDescription>Экономия 20%</CardDescription>
+                <CardDescription className="">Экономия 20%</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="">
                 <div className="text-3xl font-bold text-purple-600 mb-4">6400₽</div>
                 <div className="text-gray-600 mb-6">1600₽ за занятие</div>
-                <Button className="w-full text-white" style={{ background: 'linear-gradient(to right, #8b5cf6, #ec4899)' }}>
+                <Button variant="default" size="default" className="w-full text-white" style={{ background: 'linear-gradient(to right, #8b5cf6, #ec4899)' }}>
                   Купить абонемент
                 </Button>
               </CardContent>

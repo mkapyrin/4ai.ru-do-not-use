@@ -112,7 +112,7 @@ export default function PracticesPage() {
 
                 {/* CTA Button */}
                 <Link href={practice.url} className="block">
-                  <Button className="w-full text-white" style={{ background: 'linear-gradient(to right, #f43f5e, #f97316)' }}>
+                  <Button variant="default" size="default" className="w-full text-white" style={{ background: 'linear-gradient(to right, #f43f5e, #f97316)' }}>
                     Узнать подробнее
                   </Button>
                 </Link>
@@ -162,7 +162,7 @@ export default function PracticesPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/test">
-              <Button className="bg-white text-rose-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+              <Button variant="default" size="default" className="bg-white text-rose-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
                 Пройти тест
               </Button>
             </Link>

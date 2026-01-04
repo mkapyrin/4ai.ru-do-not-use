@@ -51,10 +51,11 @@ export default function HomePage() {
     };
     
     // Monitor image load errors
-    const handleImageError = (e) => {
+    const handleImageError = (e: Event) => {
       // #region agent log
-      if (e.target.src && (e.target.src.includes('practitioners/mike') || e.target.src.includes('practitioners/nartaka'))) {
-        fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:54',message:'Image error on homepage',data:{src:e.target.src,currentSrc:e.target.currentSrc,naturalWidth:e.target.naturalWidth,naturalHeight:e.target.naturalHeight},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+      const target = e.target as HTMLImageElement;
+      if (target && target.src && (target.src.includes('practitioners/mike') || target.src.includes('practitioners/nartaka'))) {
+        fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:54',message:'Image error on homepage',data:{src:target.src,currentSrc:target.currentSrc,naturalWidth:target.naturalWidth,naturalHeight:target.naturalHeight},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
       }
       // #endregion
     };
@@ -158,12 +159,13 @@ export default function HomePage() {
           </h2>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Button
-              size="lg"
-              className="text-white px-8 py-4 hover:opacity-90"
-              style={{ background: 'linear-gradient(to right, var(--purple-light), var(--pink-bright))' }}
-              asChild
-            >
+                <Button
+                  variant="default"
+                  size="lg"
+                  className="text-white px-8 py-4 hover:opacity-90"
+                  style={{ background: 'linear-gradient(to right, var(--purple-light), var(--pink-bright))' }}
+                  asChild
+                >
               <a
                 href="https://t.me/resursnie_bot"
                 target="_blank"
@@ -207,21 +209,14 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <Card key={index} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
+                <CardHeader className="">
                   <CardTitle className="text-xl">{service.title}</CardTitle>
-                  <CardDescription>{service.description}</CardDescription>
+                  <CardDescription className="">{service.description}</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      {service.duration}
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Users className="w-4 h-4 mr-2" />
-                      {service.participants}
-                    </div>
-                  </div>
+                <CardContent className="">
+                  <Link href={service.url || '#'} className="text-purple-600 hover:underline text-sm">
+                    Узнать больше →
+                  </Link>
                 </CardContent>
               </Card>
             ))}
@@ -249,21 +244,21 @@ export default function HomePage() {
             Свяжитесь с нами
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="flex flex-col items-center">
-              <Phone className="w-8 h-8 mb-4" style={{ color: 'var(--purple-dark)' }} />
-              <h3 className="font-semibold mb-2">Телефон</h3>
-              <p className="text-gray-600">{contact.phone}</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <MessageCircle className="w-8 h-8 mb-4" style={{ color: 'var(--purple-dark)' }} />
-              <h3 className="font-semibold mb-2">Telegram</h3>
-              <p className="text-gray-600">@resursnie_bot</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <Mail className="w-8 h-8 mb-4" style={{ color: 'var(--purple-dark)' }} />
-              <h3 className="font-semibold mb-2">Email</h3>
-              <p className="text-gray-600">{contact.email}</p>
-            </div>
+              <div className="flex flex-col items-center">
+                <Phone className="w-8 h-8 mb-4" style={{ color: 'var(--purple-dark)' }} />
+                <h3 className="font-semibold mb-2">Телефон</h3>
+                <p className="text-gray-600">{contact.methods.find(m => m.type === 'phone')?.value || '+79152370579'}</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <MessageCircle className="w-8 h-8 mb-4" style={{ color: 'var(--purple-dark)' }} />
+                <h3 className="font-semibold mb-2">Telegram</h3>
+                <p className="text-gray-600">@resursnie_bot</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <Mail className="w-8 h-8 mb-4" style={{ color: 'var(--purple-dark)' }} />
+                <h3 className="font-semibold mb-2">Email</h3>
+                <p className="text-gray-600">{contact.methods.find(m => m.type === 'email')?.value || 'info@4ai.ru'}</p>
+              </div>
           </div>
         </div>
       </section>

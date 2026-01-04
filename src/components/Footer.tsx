@@ -8,7 +8,7 @@ import { extractedContent } from '@/data/extractedContent';
 const Footer: React.FC = () => {
   const { contact } = extractedContent;
   const currentYear = new Date().getFullYear();
-  const siteVersion = '1.11.2'; // Обновляется с каждым деплоем в production
+  const siteVersion = '1.11.66'; // Обновляется с каждым деплоем в production
 
   // Use extractedContent for contact methods
   const contactMethods = contact.methods;
@@ -103,11 +103,11 @@ const Footer: React.FC = () => {
                     {method.type === 'calendar' && <Calendar className="h-4 w-4 text-purple-400" />}
                   </div>
                   <div>
-                    {method.url ? (
+                    {method.value && (method.value.startsWith('http') || method.value.startsWith('+') || method.value.startsWith('tel:') || method.value.startsWith('mailto:')) ? (
                       <a
-                        href={method.url}
-                        target={method.url.startsWith('http') ? '_blank' : undefined}
-                        rel={method.url.startsWith('http') ? 'noopener noreferrer' : undefined}
+                        href={method.value.startsWith('http') ? method.value : method.value.startsWith('+') ? `tel:${method.value}` : method.value}
+                        target={method.value.startsWith('http') ? '_blank' : undefined}
+                        rel={method.value.startsWith('http') ? 'noopener noreferrer' : undefined}
                         className="text-gray-400 hover:text-white transition-colors text-sm"
                       >
                         {method.value}

@@ -33,12 +33,15 @@ const Header: React.FC = () => {
                 className="h-[80%] w-auto max-w-[150px]"
                 onError={(e) => {
                   console.error('Logo failed to load');
-                  e.target.style.display = 'none';
-                  e.target.parentNode.innerHTML = `
-                    <span class="text-2xl font-bold bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
-                      Ресурсные
-                    </span>
-                  `;
+                  const img = e.target as HTMLImageElement;
+                  img.style.display = 'none';
+                  if (img.parentNode && img.parentNode instanceof HTMLElement) {
+                    img.parentNode.innerHTML = `
+                      <span class="text-2xl font-bold bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
+                        Ресурсные
+                      </span>
+                    `;
+                  }
                 }}
               />
             </Link>

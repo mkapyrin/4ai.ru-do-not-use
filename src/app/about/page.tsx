@@ -7,7 +7,7 @@ export default function AboutPage() {
   const { practitioners } = extractedContent;
 
   // #region agent log
-  fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'about/page.tsx:7',message:'AboutPage render - practitioners data',data:{practitionersCount:practitioners?.length,practitioner0:practitioners?.[0]?{name:practitioners[0].name,hasImage:!!practitioners[0].image,hasPhoto:!!practitioners[0].photo,imageValue:practitioners[0].image,photoValue:practitioners[0].photo}:null,practitioner1:practitioners?.[1]?{name:practitioners[1].name,hasImage:!!practitioners[1].image,hasPhoto:!!practitioners[1].photo,imageValue:practitioners[1].image,photoValue:practitioners[1].photo}:null},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'about/page.tsx:7',message:'AboutPage render - practitioners data',data:{practitionersCount:practitioners?.length,practitioner0:practitioners?.[0]?{name:practitioners[0].name,hasImage:!!practitioners[0].image,imageValue:practitioners[0].image}:null,practitioner1:practitioners?.[1]?{name:practitioners[1].name,hasImage:!!practitioners[1].image,imageValue:practitioners[1].image}:null},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
   // #endregion
 
   return (
@@ -70,8 +70,8 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 gap-8">
             {practitioners.map((practitioner, index) => {
               // #region agent log
-              const imageSrc = practitioner.image || practitioner.photo;
-              fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'about/page.tsx:71',message:'Practitioner image src resolution - POST-FIX',data:{index,name:practitioner.name,hasPhoto:!!practitioner.photo,hasImage:!!practitioner.image,photoValue:practitioner.photo,imageValue:practitioner.image,resolvedSrc:imageSrc},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'A'})}).catch(()=>{});
+              const imageSrc = practitioner.image;
+                  fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'about/page.tsx:71',message:'Practitioner image src resolution - POST-FIX',data:{index,name:practitioner.name,hasImage:!!practitioner.image,imageValue:practitioner.image,resolvedSrc:imageSrc},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'A'})}).catch(()=>{});
               // #endregion
               return (
               <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -80,29 +80,33 @@ export default function AboutPage() {
                     src={imageSrc}
                     alt={practitioner.name}
                     className="w-full h-full object-cover"
-                    onError={(e) => {
-                      // #region agent log
-                      fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'about/page.tsx:83',message:'Image load error - POST-FIX',data:{index,name:practitioner.name,attemptedSrc:e.target.src,currentSrc:e.target.currentSrc,errorType:e.type},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'B'})}).catch(()=>{});
-                      // #endregion
-                      e.target.style.display = 'none';
-                      e.target.parentNode.innerHTML = `
-                        <div class="w-full h-full flex items-center justify-center">
-                          <span class="text-white text-6xl font-bold">${practitioner.name.charAt(0)}</span>
-                        </div>
-                      `;
-                    }}
-                    onLoad={(e) => {
-                      // #region agent log
-                      fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'about/page.tsx:94',message:'Image load success - POST-FIX',data:{index,name:practitioner.name,loadedSrc:e.target.src,currentSrc:e.target.currentSrc,naturalWidth:e.target.naturalWidth,naturalHeight:e.target.naturalHeight},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'C'})}).catch(()=>{});
-                      // #endregion
-                    }}
+                        onError={(e) => {
+                          // #region agent log
+                          const img = e.target as HTMLImageElement;
+                          fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'about/page.tsx:83',message:'Image load error - POST-FIX',data:{index,name:practitioner.name,attemptedSrc:img.src,currentSrc:img.currentSrc,errorType:e.type},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'B'})}).catch(()=>{});
+                          // #endregion
+                          img.style.display = 'none';
+                          if (img.parentNode && img.parentNode instanceof HTMLElement) {
+                            img.parentNode.innerHTML = `
+                              <div class="w-full h-full flex items-center justify-center">
+                                <span class="text-white text-6xl font-bold">${practitioner.name.charAt(0)}</span>
+                              </div>
+                            `;
+                          }
+                        }}
+                        onLoad={(e) => {
+                          // #region agent log
+                          const img = e.target as HTMLImageElement;
+                          fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'about/page.tsx:94',message:'Image load success - POST-FIX',data:{index,name:practitioner.name,loadedSrc:img.src,currentSrc:img.currentSrc,naturalWidth:img.naturalWidth,naturalHeight:img.naturalHeight},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'C'})}).catch(()=>{});
+                          // #endregion
+                        }}
                   />
                 </div>
                 <div className="p-6">
                   <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
                     {practitioner.name}
                   </h3>
-                  <p className="text-purple-600 font-medium mb-3">{practitioner.role || practitioner.title}</p>
+                      <p className="text-purple-600 font-medium mb-3">{practitioner.role}</p>
                   <p className="text-gray-600 mb-4">{practitioner.description}</p>
 
                   <div className="space-y-2">

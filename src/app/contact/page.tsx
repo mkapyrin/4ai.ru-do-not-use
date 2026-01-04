@@ -35,11 +35,11 @@ export default function ContactPage() {
                   <div>
                     <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{method.label}</p>
                     <p style={{ color: 'var(--text-secondary)' }}>
-                      {method.url ? (
+                      {method.value && (method.value.startsWith('http') || method.value.startsWith('+') || method.value.startsWith('tel:') || method.value.startsWith('mailto:')) ? (
                         <a
-                          href={method.url}
-                          target={method.url.startsWith('http') ? '_blank' : undefined}
-                          rel={method.url.startsWith('http') ? 'noopener noreferrer' : undefined}
+                          href={method.value.startsWith('http') ? method.value : method.value.startsWith('+') ? `tel:${method.value}` : method.value}
+                          target={method.value.startsWith('http') ? '_blank' : undefined}
+                          rel={method.value.startsWith('http') ? 'noopener noreferrer' : undefined}
                           className="text-purple-600 hover:underline"
                         >
                           {method.value}

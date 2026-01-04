@@ -93,6 +93,7 @@ export default function BlogPage() {
               key={index}
               variant={index === 0 ? "default" : "secondary"}
               className="cursor-pointer px-4 py-2"
+              size="default"
             >
               {category.name} ({category.count})
             </Badge>
@@ -115,7 +116,7 @@ export default function BlogPage() {
 
                 <CardHeader className="pb-3">
                   <div className="flex items-center space-x-2 mb-2">
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="outline" size="default" className="text-xs">
                       {post.category}
                     </Badge>
                     <div className="flex items-center space-x-1 text-xs text-gray-500">
@@ -162,7 +163,7 @@ export default function BlogPage() {
                   </div>
 
                   <Link href={`/blog/${post.id}`}>
-                    <Button variant="outline" className="w-full">
+                    <Button variant="outline" size="default" className="w-full">
                       Читать статью
                       <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
@@ -211,7 +212,7 @@ export default function BlogPage() {
             Пройдите наш тест и получите персональные рекомендации по практикам
           </p>
           <Link href="/test">
-            <Button className="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+            <Button variant="default" size="default" className="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
               Пройти тест
             </Button>
           </Link>
