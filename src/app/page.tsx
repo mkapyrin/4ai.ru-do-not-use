@@ -20,6 +20,53 @@ export default function HomePage() {
   const practitioners = extractedContent.practitioners;
   const services = homepage.services;
 
+  // #region agent log
+  useEffect(() => {
+    fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:16',message:'HomePage mount - checking for API calls',data:{practitionersCount:practitioners?.length,servicesCount:services?.length,windowLocation:typeof window!=='undefined'?window.location.href:'SSR'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    
+    // Monitor fetch calls
+    const originalFetch = window.fetch;
+    window.fetch = function(...args) {
+      const url = args[0];
+      // #region agent log
+      if (typeof url === 'string' && (url.includes('/api/content') || url.includes('/content/'))) {
+        fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:32',message:'API fetch detected',data:{url,method:args[1]?.method||'GET',stackTrace:new Error().stack?.split('\n').slice(0,5).join('\n')},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      }
+      // #endregion
+      return originalFetch.apply(this, args).then(response => {
+        // #region agent log
+        if (typeof url === 'string' && (url.includes('/api/content') || url.includes('/content/'))) {
+          fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:32',message:'API response received',data:{url,status:response.status,statusText:response.statusText,ok:response.ok},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        }
+        // #endregion
+        return response;
+      }).catch(error => {
+        // #region agent log
+        if (typeof url === 'string' && (url.includes('/api/content') || url.includes('/content/'))) {
+          fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:39',message:'API fetch error',data:{url,error:error.message,stack:error.stack},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        }
+        // #endregion
+        throw error;
+      });
+    };
+    
+    // Monitor image load errors
+    const handleImageError = (e) => {
+      // #region agent log
+      if (e.target.src && (e.target.src.includes('practitioners/mike') || e.target.src.includes('practitioners/nartaka'))) {
+        fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:54',message:'Image error on homepage',data:{src:e.target.src,currentSrc:e.target.currentSrc,naturalWidth:e.target.naturalWidth,naturalHeight:e.target.naturalHeight},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+      }
+      // #endregion
+    };
+    document.addEventListener('error', handleImageError, true);
+    
+    return () => {
+      window.fetch = originalFetch;
+      document.removeEventListener('error', handleImageError, true);
+    };
+  }, [practitioners, services]);
+  // #endregion
+
   // A/B Test: Emotional H1 variants
   const h1Variants = [
     'Место, где тело снова доверяет близости',
