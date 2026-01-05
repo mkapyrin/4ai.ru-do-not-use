@@ -1,5 +1,19 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## ⚠️ КРИТИЧЕСКИ ВАЖНО: КАЧЕСТВО ПРЕЖДЕ ВСЕГО
+
+**Главное правило:** КАЧЕСТВО > СКОРОСТЬ
+
+> Быстрые и неправильные решения стоят в 50-100 раз дороже по токенам из-за пустой работы и исправлений.
+
+**Принцип работы:**
+1. ПРОВЕРИТЬ - собрать информацию о текущем состоянии
+2. ПРОАНАЛИЗИРОВАТЬ - понять причину проблемы
+3. ПОНЯТЬ - убедиться, что понимание полное
+4. ПРЕДЛОЖИТЬ РЕШЕНИЕ - только после полного понимания
+
+См. также: `QUALITY-FIRST.md`, `WORKING-PRINCIPLES.md`
+
 ## Environment Variables Setup
 
 Create a `.env.local` file in the root directory and add:
