@@ -23,7 +23,7 @@ interface AnswerPoints {
 
 interface TestAnswer {
   text: string;
-  value: string;
+  value?: string;
   points: AnswerPoints;
 }
 
@@ -89,7 +89,7 @@ export default function TantricTestPage() {
     if (selectedAnswers.length === 0) return;
 
     const newAnswers = [...answers];
-    newAnswers[currentQuestion] = selectedAnswers.map(a => a.value);
+    newAnswers[currentQuestion] = selectedAnswers.map(a => a.value || a.text);
     setAnswers(newAnswers);
 
     if (currentQuestion < questions.length - 1) {
@@ -98,8 +98,11 @@ export default function TantricTestPage() {
     } else {
       // После теста сразу показываем результаты
       const testResult = calculateArchetype(newAnswers, gender);
-      setResult(testResult);
-      setCurrentStep('results');
+      // Убеждаемся, что primary всегда строка
+      if (testResult && testResult.primary) {
+        setResult(testResult as TestResult);
+        setCurrentStep('results');
+      }
     }
 
     // Сбрасываем скролл на верх страницы после обновления состояния

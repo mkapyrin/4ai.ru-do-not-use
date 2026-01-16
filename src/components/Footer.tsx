@@ -8,7 +8,7 @@ import { extractedContent } from '@/data/extractedContent';
 const Footer: React.FC = () => {
   const { contact } = extractedContent;
   const currentYear = new Date().getFullYear();
-  const siteVersion = '1.11.67'; // Обновляется с каждым деплоем в production
+  const siteVersion = '1.11.71'; // Обновляется с каждым деплоем в production
 
   // Use extractedContent for contact methods
   const contactMethods = contact.methods;
