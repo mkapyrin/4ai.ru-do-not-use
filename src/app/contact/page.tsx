@@ -25,7 +25,7 @@ export default function ContactPage() {
           <div className="rounded-lg p-8 shadow-lg" style={{ backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-color)', borderWidth: '1px' }}>
             <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>Способы связи</h2>
             <div className="space-y-4">
-              {contact.methods.map((method, index) => (
+              {contact?.methods && contact.methods.length > 0 ? contact.methods.map((method, index) => (
                 <div key={index} className="flex items-center space-x-3">
                   {(method.type === 'telegram' || method.type === 'telegram2') && <MessageCircle className="w-5 h-5 text-blue-500" />}
                   {method.type === 'whatsapp' && <MessageCircle className="w-5 h-5 text-green-500" />}
@@ -50,7 +50,7 @@ export default function ContactPage() {
                     </p>
                   </div>
                 </div>
-              ))}
+              )) : null}
             </div>
 
             {/* Schedule */}

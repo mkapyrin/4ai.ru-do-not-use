@@ -20,53 +20,6 @@ export default function HomePage() {
   const practitioners = extractedContent.practitioners;
   const services = homepage.services;
 
-  // #region agent log
-  useEffect(() => {
-    fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:16',message:'HomePage mount - checking for API calls',data:{practitionersCount:practitioners?.length,servicesCount:services?.length,windowLocation:typeof window!=='undefined'?window.location.href:'SSR'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-    
-    // Monitor fetch calls
-    const originalFetch = window.fetch;
-    window.fetch = function(...args) {
-      const url = args[0];
-      // #region agent log
-      if (typeof url === 'string' && (url.includes('/api/content') || url.includes('/content/'))) {
-        fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:32',message:'API fetch detected',data:{url,method:args[1]?.method||'GET',stackTrace:new Error().stack?.split('\n').slice(0,5).join('\n')},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-      }
-      // #endregion
-      return originalFetch.apply(this, args).then(response => {
-        // #region agent log
-        if (typeof url === 'string' && (url.includes('/api/content') || url.includes('/content/'))) {
-          fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:32',message:'API response received',data:{url,status:response.status,statusText:response.statusText,ok:response.ok},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-        }
-        // #endregion
-        return response;
-      }).catch(error => {
-        // #region agent log
-        if (typeof url === 'string' && (url.includes('/api/content') || url.includes('/content/'))) {
-          fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:39',message:'API fetch error',data:{url,error:error.message,stack:error.stack},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-        }
-        // #endregion
-        throw error;
-      });
-    };
-    
-    // Monitor image load errors
-    const handleImageError = (e: Event) => {
-      // #region agent log
-      const target = e.target as HTMLImageElement;
-      if (target && target.src && (target.src.includes('practitioners/mike') || target.src.includes('practitioners/nartaka'))) {
-        fetch('http://127.0.0.1:7243/ingest/1758e597-368d-4b04-a97a-0a10c135087d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:54',message:'Image error on homepage',data:{src:target.src,currentSrc:target.currentSrc,naturalWidth:target.naturalWidth,naturalHeight:target.naturalHeight},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-      }
-      // #endregion
-    };
-    document.addEventListener('error', handleImageError, true);
-    
-    return () => {
-      window.fetch = originalFetch;
-      document.removeEventListener('error', handleImageError, true);
-    };
-  }, [practitioners, services]);
-  // #endregion
 
   // A/B Test: Emotional H1 variants
   const h1Variants = [
@@ -79,6 +32,8 @@ export default function HomePage() {
 
   // Initialize A/B test variant from localStorage or randomly select
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const storageKey = 'hero_h1_variant';
     const storedVariant = localStorage.getItem(storageKey);
     
@@ -106,6 +61,8 @@ export default function HomePage() {
 
   // Track scroll depth
   useEffect(() => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+    
     const handleScroll = () => {
       const scrollTop = window.pageYOffset;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -159,13 +116,13 @@ export default function HomePage() {
           </h2>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-                <Button
+            <Button
                   variant="default"
-                  size="lg"
-                  className="text-white px-8 py-4 hover:opacity-90"
-                  style={{ background: 'linear-gradient(to right, var(--purple-light), var(--pink-bright))' }}
-                  asChild
-                >
+              size="lg"
+              className="text-white px-8 py-4 hover:opacity-90"
+              style={{ background: 'linear-gradient(to right, var(--purple-light), var(--pink-bright))' }}
+              asChild
+            >
               <a
                 href="https://t.me/resursnie_bot"
                 target="_blank"
@@ -207,7 +164,7 @@ export default function HomePage() {
             Наши практики
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service, index) => (
+            {services && services.length > 0 ? services.map((service, index) => (
               <Card key={index} className="hover:shadow-lg transition-shadow">
                 <CardHeader className="">
                   <CardTitle className="text-xl">{service.title}</CardTitle>
@@ -219,7 +176,7 @@ export default function HomePage() {
                   </Link>
                 </CardContent>
               </Card>
-            ))}
+            )) : null}
           </div>
         </div>
       </section>
@@ -244,21 +201,21 @@ export default function HomePage() {
             Свяжитесь с нами
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
-              <div className="flex flex-col items-center">
-                <Phone className="w-8 h-8 mb-4" style={{ color: 'var(--purple-dark)' }} />
-                <h3 className="font-semibold mb-2">Телефон</h3>
-                <p className="text-gray-600">{contact.methods.find(m => m.type === 'phone')?.value || '+79152370579'}</p>
-              </div>
-              <div className="flex flex-col items-center">
-                <MessageCircle className="w-8 h-8 mb-4" style={{ color: 'var(--purple-dark)' }} />
-                <h3 className="font-semibold mb-2">Telegram</h3>
-                <p className="text-gray-600">@resursnie_bot</p>
-              </div>
-              <div className="flex flex-col items-center">
-                <Mail className="w-8 h-8 mb-4" style={{ color: 'var(--purple-dark)' }} />
-                <h3 className="font-semibold mb-2">Email</h3>
-                <p className="text-gray-600">{contact.methods.find(m => m.type === 'email')?.value || 'info@4ai.ru'}</p>
-              </div>
+            <div className="flex flex-col items-center">
+              <Phone className="w-8 h-8 mb-4" style={{ color: 'var(--purple-dark)' }} />
+              <h3 className="font-semibold mb-2">Телефон</h3>
+                <p className="text-gray-600">{contact?.methods?.find(m => m.type === 'phone')?.value || '+79152370579'}</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <MessageCircle className="w-8 h-8 mb-4" style={{ color: 'var(--purple-dark)' }} />
+              <h3 className="font-semibold mb-2">Telegram</h3>
+              <p className="text-gray-600">@resursnie_bot</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <Mail className="w-8 h-8 mb-4" style={{ color: 'var(--purple-dark)' }} />
+              <h3 className="font-semibold mb-2">Email</h3>
+                <p className="text-gray-600">{contact?.methods?.find(m => m.type === 'email')?.value || 'info@4ai.ru'}</p>
+            </div>
           </div>
         </div>
       </section>

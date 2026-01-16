@@ -62,11 +62,11 @@ export default function BlogPage() {
   ];
 
   const categories = [
-    { name: "Все статьи", count: blogPosts.length },
-    { name: "Основы", count: blogPosts.filter(p => p.category === "Основы").length },
-    { name: "Терапия", count: blogPosts.filter(p => p.category === "Терапия").length },
-    { name: "Медитация", count: blogPosts.filter(p => p.category === "Медитация").length },
-    { name: "Энергия", count: blogPosts.filter(p => p.category === "Энергия").length }
+    { name: "Все статьи", count: blogPosts?.length || 0 },
+    { name: "Основы", count: blogPosts?.filter(p => p.category === "Основы").length || 0 },
+    { name: "Терапия", count: blogPosts?.filter(p => p.category === "Терапия").length || 0 },
+    { name: "Медитация", count: blogPosts?.filter(p => p.category === "Медитация").length || 0 },
+    { name: "Энергия", count: blogPosts?.filter(p => p.category === "Энергия").length || 0 }
   ];
 
   return (
@@ -102,7 +102,7 @@ export default function BlogPage() {
 
         {/* Blog Posts Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 mb-16">
-          {blogPosts.map((post, index) => (
+          {blogPosts && blogPosts.length > 0 ? blogPosts.map((post, index) => (
             <motion.div
               key={post.id}
               initial={{ opacity: 0, y: 20 }}
@@ -171,7 +171,7 @@ export default function BlogPage() {
                 </CardContent>
               </Card>
             </motion.div>
-          ))}
+          )) : null}
         </div>
 
         {/* Newsletter CTA */}

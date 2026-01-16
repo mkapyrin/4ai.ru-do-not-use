@@ -12,35 +12,71 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Star, Phone, Mail, MessageCircle, Share2, ArrowRight, Sparkles, CheckCircle } from 'lucide-react';
 import { genderQuestion, questions, calculateArchetype, shareTexts } from '@/data/testData';
 
+interface AnswerPoints {
+  warrior: number;
+  guardian: number;
+  creator: number;
+  sage: number;
+  healer: number;
+  mystic: number;
+}
+
+interface TestAnswer {
+  text: string;
+  value: string;
+  points: AnswerPoints;
+}
+
+interface TestResult {
+  primary: string;
+  scores: AnswerPoints;
+  archetype: {
+    name: string;
+    title: string;
+    description: string;
+    color: string;
+    strengths: string[];
+    growthAreas: string[];
+    suitableService: {
+      name: string;
+      description: string;
+    };
+  };
+}
+
 export default function TantricTestPage() {
   const [currentStep, setCurrentStep] = useState<'intro' | 'gender' | 'test' | 'results' | 'contact'>('intro');
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<any[]>([]);
+  const [answers, setAnswers] = useState<string[][]>([]);
   const [gender, setGender] = useState('');
-  const [selectedAnswers, setSelectedAnswers] = useState<any[]>([]);
+  const [selectedAnswers, setSelectedAnswers] = useState<TestAnswer[]>([]);
   const [userInfo, setUserInfo] = useState({ name: '', email: '', phone: '' });
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<TestResult | null>(null);
 
   const handleStartTest = () => {
     setCurrentStep('gender');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handleGenderSelect = (genderValue: string) => {
     setGender(genderValue);
     setCurrentStep('test');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
-  const handleAnswerToggle = (answer: any) => {
+  const handleAnswerToggle = (answer: TestAnswer) => {
     const currentQ = questions[currentQuestion];
 
     if (currentQ.type === 'single') {
       setSelectedAnswers([answer]);
     } else {
-      const isSelected = selectedAnswers.some((a: any) => a.text === answer.text);
+      const isSelected = selectedAnswers.some((a: TestAnswer) => a.text === answer.text);
       if (isSelected) {
-        setSelectedAnswers(selectedAnswers.filter((a: any) => a.text !== answer.text));
+        setSelectedAnswers(selectedAnswers.filter((a: TestAnswer) => a.text !== answer.text));
       } else {
         if (selectedAnswers.length < currentQ.maxChoices) {
           setSelectedAnswers([...selectedAnswers, answer]);
@@ -67,15 +103,19 @@ export default function TantricTestPage() {
     }
 
     // Сбрасываем скролл на верх страницы после обновления состояния
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 100);
+    if (typeof window !== 'undefined') {
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
+    }
   };
 
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setCurrentStep('contact');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handleRetakeTest = () => {

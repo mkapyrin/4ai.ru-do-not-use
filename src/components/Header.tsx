@@ -32,15 +32,17 @@ const Header: React.FC = () => {
                 alt="Ресурсные"
                 className="h-[80%] w-auto max-w-[150px]"
                 onError={(e) => {
-                  console.error('Logo failed to load');
+                  if (process.env.NODE_ENV === 'development') {
+                    console.error('Logo failed to load');
+                  }
                   const img = e.target as HTMLImageElement;
                   img.style.display = 'none';
                   if (img.parentNode && img.parentNode instanceof HTMLElement) {
                     img.parentNode.innerHTML = `
-                      <span class="text-2xl font-bold bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
-                        Ресурсные
-                      </span>
-                    `;
+                    <span class="text-2xl font-bold bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
+                      Ресурсные
+                    </span>
+                  `;
                   }
                 }}
               />
