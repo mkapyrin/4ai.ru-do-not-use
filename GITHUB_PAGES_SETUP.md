@@ -50,7 +50,7 @@ git push origin main
 https://mkapyrin.github.io/4ai.ru/
 ```
 
-**GitHub репозиторий:** https://github.com/mkapyrin/4ai.ru
+**GitHub репозиторий:** https://github.com/mkapyrin/4ai.ru-do-not-use
 
 ## Локальная разработка:
 ```bash
